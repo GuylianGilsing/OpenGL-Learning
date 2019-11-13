@@ -1,0 +1,46 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "g++",
+            "linux": {
+                "args": [
+                    "main.cpp",
+                    "-g",
+                    "--std=c++17",
+                    "-I${workspaceRoot}/dependencies/GLFW/include",
+                    "-I${workspaceFolder}/dependencies/GLAD/include",
+                    "-lopengl32",
+                    "-L${workspaceRoot}/dependencies/GLFW/lib-mingw",
+                    "-static",
+                    "-lglfw3dll",
+                    "-o",
+                    "${workspaceRoot}/builds/windows/main"
+                ]
+            },
+            "windows": {
+                "args": [
+                    "main.cpp",
+                    "-g",
+                    "--std=c++17",
+                    "-I${workspaceRoot}/dependencies/GLFW/include",
+                    "-I${workspaceFolder}/dependencies/GLAD/include",
+                    "-lopengl32",
+                    "-L${workspaceRoot}/dependencies/GLFW/lib-mingw",
+                    "-static",
+                    "-lglfw3dll",
+                    "-o",
+                    "${workspaceRoot}/builds/windows/main"
+                ]
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
