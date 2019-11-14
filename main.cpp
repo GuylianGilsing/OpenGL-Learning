@@ -3,11 +3,16 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
+// #include "src\engine\shaderLoader\shaderLoader.h"
+
 // Includes the standard "std" lib
 #include <iostream>
 
 int screenWidth = 800;
 int screenHeight = 600;
+
+// Objects.
+// ShaderLoader shaderLoader;
 
 // References.
 void framebuffer_size_callback(GLFWwindow* a_window, int a_width, int a_height);
@@ -17,6 +22,10 @@ void render();
 
 int main()
 {
+    // std::cout << shaderLoader.getShaderString("src/shaders/basicVertexShader.glsl") << std::endl;
+    // std::cin.get();
+
+    // return 0;
     // ---
     // Initialize GLFW.
     // ---
