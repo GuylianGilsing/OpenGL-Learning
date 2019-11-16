@@ -1,6 +1,11 @@
 # Learning OpenGL - learnopengl.com
 My project while learning OpenGL at https://learnopengl.com
 
+# Prerequisites
+## MinGW Instalation
+Make sure that MinGW is installed, in order to run the compiler the g++ command needs to be added to your PATH variable.
+
+# Building, running and debug
 ## Building the application
 Make sure that you are in the same directory as the main.cpp file. While in Visual Studio Code, press CTRL + SHIFT + B to build.
 
