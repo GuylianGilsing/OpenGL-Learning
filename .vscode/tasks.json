@@ -10,6 +10,8 @@
             "linux": {
                 "args": [
                     "main.cpp",
+                    // Include all source files.
+                    "${workspaceRoot}/src/engine/shaderLoader/shaderLoader.cpp",
                     "-g",
                     "--std=c++17",
                     "-I${workspaceRoot}/dependencies/GLFW/include",
@@ -25,6 +27,8 @@
             "windows": {
                 "args": [
                     "main.cpp",
+                    // Include all source files.
+                    "${workspaceRoot}/src/engine/shaderLoader/shaderLoader.cpp",
                     "-g",
                     "--std=c++17",
                     "-I${workspaceRoot}/dependencies/GLFW/include",

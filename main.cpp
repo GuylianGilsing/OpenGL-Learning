@@ -22,10 +22,6 @@ void render();
 
 int main()
 {
-    std::cout << shaderLoader.getShaderString("src/shaders/basicVertexShader.glsl") << std::endl;
-    std::cin.get();
-
-    return 0;
     // ---
     // Initialize GLFW.
     // ---
@@ -174,14 +170,8 @@ int setupRender()
 
     // Basic vertex shader code in GLSL.
     // std::string is not supported by OpenGL shaderSource function, so we use a const char pointer.
-    const char *basicVertexShader = 
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\n";
+    std::string vertexShaderString = shaderLoader.getShaderString("src/shaders/basicVertexShader.glsl");
+    const char *basicVertexShader = vertexShaderString.c_str();
 
     // Integer used to keep track of the vertex shaders.
     unsigned int vertexShader;
@@ -212,14 +202,8 @@ int setupRender()
 
     // Basic fragment shader code in GLSL.
     // std::string is not supported by OpenGL shaderSource function, so we use a const char pointer.
-    const char *basicFragmentShader = 
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n";
+    std::string fragmentShaderString = shaderLoader.getShaderString("src/shaders/basicFragmentShader.glsl");
+    const char *basicFragmentShader = fragmentShaderString.c_str();
 
     // Integer used to keep track of the vertex shaders.
     unsigned int fragmentShader;
