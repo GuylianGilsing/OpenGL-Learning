@@ -3,6 +3,7 @@
 #include <GLFW\glfw3.h>
 
 #include "headers\shaderLoader\shaderLoader.h"
+#include "headers\shader\shader.h"
 
 // Includes the standard "std" lib
 #include <iostream>
@@ -12,6 +13,7 @@ int screenHeight = 600;
 
 // Objects.
 ShaderLoader shaderLoader;
+Shader basicShaderProgram;
 
 // References.
 void framebuffer_size_callback(GLFWwindow* a_window, int a_width, int a_height);
@@ -163,6 +165,16 @@ int setupRender()
     // Create a vertex shader. (GLSL)
     // ---
 
+    std::string vertexShader = shaderLoader.getShaderString("src/shaders/basicVertexShader.glsl");
+    std::string fragmentShader = shaderLoader.getShaderString("src/shaders/basicFragmentShader.glsl");
+
+    basicShaderProgram.setVertexShader(vertexShader);
+    basicShaderProgram.setFragmentShader(fragmentShader);
+
+    shaderProgram = basicShaderProgram.compile();
+    basicShaderProgram.use();
+
+/*
     // In order to actually see what is being rendered, we need to have some shaders defined.
     // Your graphics card may have some default shader code in it, but to make sure everyone
     // sees what is rendered we need to define our own shaders.
@@ -254,7 +266,7 @@ int setupRender()
     glUseProgram(shaderProgram);
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-
+*/
     // ---
     // Linking vertex attributes.
     // ---
@@ -352,7 +364,8 @@ int setupRender()
 
 void render()
 {
-    glUseProgram(shaderProgram);
+    // glUseProgram(shaderProgram);
+    basicShaderProgram.use();
     glBindVertexArray(vaoBuffer);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }

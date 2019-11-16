@@ -13,6 +13,7 @@
                     // Include all source files.
                     "${workspaceRoot}/dependencies/GLAD/src/glad.c",
                     "${workspaceRoot}/src/shaderLoader.cpp",
+                    "${workspaceRoot}/src/shader.cpp",
                     "-g",
                     "--std=c++17",
                     "-I${workspaceRoot}/dependencies/GLFW/include",
@@ -31,6 +32,7 @@
                     // Include all source files.
                     "${workspaceRoot}/dependencies/GLAD/src/glad.c",
                     "${workspaceRoot}/src/shaderLoader.cpp",
+                    "${workspaceRoot}/src/shader.cpp",
                     "-g",
                     "--std=c++17",
                     "-I${workspaceRoot}/dependencies/GLFW/include",

@@ -1,0 +1,26 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
+
+// Creates a new shader program.
+class Shader
+{
+private:
+    unsigned int shaderProgram;
+
+    unsigned int vertexShaderID;
+    const char* vertexShaderSource;
+
+    unsigned int fragmentShaderID;
+    const char* fragmentShaderSource;
+
+public:
+    // Sets the vertex shader of this program.
+    bool setVertexShader(std::string a_vertexShaderSource);
+    bool setFragmentShader(std::string a_fragmentShaderSource);
+    int compile();
+    void use();
+
+private:
+    bool shaderCompiled(unsigned int a_id);
+};
