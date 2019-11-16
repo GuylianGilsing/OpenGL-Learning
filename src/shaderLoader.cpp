@@ -1,5 +1,5 @@
 #include <iostream>
-#include "shaderLoader.h"
+#include "headers/shaderLoader/shaderLoader.h"
 
 std::string ShaderLoader::getShaderString(std::string a_pathToShaderFile)
 {

@@ -1,9 +1,8 @@
 // Include libs.
-#include "dependencies\GLAD\src\glad.c"
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-#include "src\engine\shaderLoader\shaderLoader.h"
+#include "headers\shaderLoader\shaderLoader.h"
 
 // Includes the standard "std" lib
 #include <iostream>
