@@ -2,7 +2,6 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-#include "headers\shaderLoader\shaderLoader.h"
 #include "headers\shader\shader.h"
 
 // Includes the standard "std" lib
@@ -12,7 +11,6 @@ int screenWidth = 800;
 int screenHeight = 600;
 
 // Objects.
-ShaderLoader shaderLoader;
 Shader basicShaderProgram;
 
 // References.
@@ -162,111 +160,15 @@ int setupRender()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
     // ---
-    // Create a vertex shader. (GLSL)
+    // Create a shader program. (GLSL)
     // ---
 
-    std::string vertexShader = shaderLoader.getShaderString("src/shaders/basicVertexShader.glsl");
-    std::string fragmentShader = shaderLoader.getShaderString("src/shaders/basicFragmentShader.glsl");
-
-    basicShaderProgram.setVertexShader(vertexShader);
-    basicShaderProgram.setFragmentShader(fragmentShader);
+    basicShaderProgram.setVertexShader("src/shaders/basicVertexShader.glsl");
+    basicShaderProgram.setFragmentShader("src/shaders/basicFragmentShader.glsl");
 
     shaderProgram = basicShaderProgram.compile();
     basicShaderProgram.use();
 
-/*
-    // In order to actually see what is being rendered, we need to have some shaders defined.
-    // Your graphics card may have some default shader code in it, but to make sure everyone
-    // sees what is rendered we need to define our own shaders.
-
-    // Basic vertex shader code in GLSL.
-    // std::string is not supported by OpenGL shaderSource function, so we use a const char pointer.
-    std::string vertexShaderString = shaderLoader.getShaderString("src/shaders/basicVertexShader.glsl");
-    const char *basicVertexShader = vertexShaderString.c_str();
-
-    // Integer used to keep track of the vertex shaders.
-    unsigned int vertexShader;
-
-    // Create a new vertex shader.
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-    // Bind the GLSL code to the newly created vertex shader, then compile it.
-    glShaderSource(vertexShader, 1, &basicVertexShader, NULL);
-    glCompileShader(vertexShader);
-
-    // Make sure that the shader compiles.
-    int shaderCompiled;
-    char shaderCompileInfoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &shaderCompiled);
-
-    if(!shaderCompiled)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, shaderCompileInfoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << shaderCompileInfoLog << std::endl;
-        
-        return -1;
-    }
-
-    // ---
-    // Create a fragment shader (GLSL).
-    // ---
-
-    // Basic fragment shader code in GLSL.
-    // std::string is not supported by OpenGL shaderSource function, so we use a const char pointer.
-    std::string fragmentShaderString = shaderLoader.getShaderString("src/shaders/basicFragmentShader.glsl");
-    const char *basicFragmentShader = fragmentShaderString.c_str();
-
-    // Integer used to keep track of the vertex shaders.
-    unsigned int fragmentShader;
-
-    // Create a new vertex shader.
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-    // Bind the GLSL code to the newly created vertex shader, then compile it.
-    glShaderSource(fragmentShader, 1, &basicFragmentShader, NULL);
-    glCompileShader(fragmentShader);
-
-    // Make sure that the shader compiles.
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &shaderCompiled);
-
-    if(!shaderCompiled)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, shaderCompileInfoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << shaderCompileInfoLog << std::endl;
-
-        return -1;
-    }
-
-    // ---
-    // Link the vertex and fragment shader.
-    // ---
-
-    // In order to use the vertex and fragment shader, we need to link those to a shader program.
-    // shaderProgram is defined above this function.
-
-    // Create a shader program.
-    shaderProgram = glCreateProgram();
-
-    // Attach the shaders to the shader program.
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    // Make sure that the shader program has been linked successfully.
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &shaderCompiled);
-    if(!shaderCompiled)
-    {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, shaderCompileInfoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << shaderCompileInfoLog << std::endl;
-
-        return -1;
-    }
-    
-    // Select the program and get rid of the shaders.
-    glUseProgram(shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-*/
     // ---
     // Linking vertex attributes.
     // ---

@@ -1,13 +1,16 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <iostream>
 #include "headers/shader/shader.h"
+#include <iostream>
+#include <fstream>
+#include <string.h>
 
 // Sets the vertex shader of this program.
-bool Shader::setVertexShader(std::string a_vertexShaderSource)
+bool Shader::setVertexShader(std::string a_pathToShaderSourceFile)
 {
-    this->vertexShaderSource = a_vertexShaderSource.c_str();
+    std::string shaderSource = this->loadShaderSource(a_pathToShaderSourceFile);
+    this->vertexShaderSource = shaderSource.c_str();
 
     // Create the new vertex shader.
     this->vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -22,9 +25,10 @@ bool Shader::setVertexShader(std::string a_vertexShaderSource)
     return true;
 }
 
-bool Shader::setFragmentShader(std::string a_fragmentShaderSource)
+bool Shader::setFragmentShader(std::string a_pathToShaderSourceFile)
 {
-    this->fragmentShaderSource = a_fragmentShaderSource.c_str();
+    std::string shaderSource = this->loadShaderSource(a_pathToShaderSourceFile);
+    this->fragmentShaderSource = shaderSource.c_str();
 
     // Create the new vertex shader.
     this->fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -74,6 +78,38 @@ int Shader::compile()
 void Shader::use()
 {
     glUseProgram(this->shaderProgram);
+}
+
+std::string Shader::loadShaderSource(std::string a_pathToShaderSourceFile)
+{
+    std::ifstream fileReader;
+    fileReader.open(a_pathToShaderSourceFile, std::ios::binary);
+
+    // Make sure to check that the file is open.
+    if(fileReader.is_open())
+    {
+        // Set the 'cursor' at the beginning of the file.
+        fileReader.seekg(0, std::ios::beg);
+
+        std::string line;
+        std::string output;
+        while (std::getline(fileReader, line))
+        {
+            output.append(line);
+            output.append("\n");
+        }
+
+        // Add a null terminator at the end of the string.
+        output.append("\0");
+
+        return output;
+    }
+    else
+    {
+        std::cerr << "Could not open file." << std::endl;
+    }
+
+    return "";
 }
 
 bool Shader::shaderCompiled(unsigned int a_id)

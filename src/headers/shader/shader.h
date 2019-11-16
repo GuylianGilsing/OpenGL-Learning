@@ -22,5 +22,6 @@ public:
     void use();
 
 private:
+    std::string loadShaderSource(std::string a_pathToShaderSourceFile);
     bool shaderCompiled(unsigned int a_id);
 };
