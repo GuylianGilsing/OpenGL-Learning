@@ -3,6 +3,7 @@
 #include <GLFW\glfw3.h>
 
 #include "headers\shader\shader.h"
+#include "headers\renderItem\renderItem.h"
 
 // Includes the standard "std" lib
 #include <iostream>
@@ -100,12 +101,15 @@ int main()
          0.5f,  0.5f, 0.0f,  // top right
          0.5f, -0.5f, 0.0f,  // bottom right
         -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
+        // -0.5f,  0.5f, 0.0f   // top left 
     };
+
     unsigned int indices[] = {  // note that we start from 0!
         0, 1, 3,  // first Triangle
         1, 2, 3   // second Triangle
     };
+    
+    /*
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -131,6 +135,14 @@ int main()
     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0); 
+    */
+
+   RenderItem indexedSquare;
+   indexedSquare.setVertexData(vertices, GL_STATIC_DRAW);
+//    indexedSquare.setIndexData(indices, GL_STATIC_DRAW);
+   indexedSquare.setDataLayout(0, 3, GL_FALSE, GL_FLOAT, 3 * sizeof(float), (void*)0);
+   indexedSquare.setNormalDrawingLayout(GL_TRIANGLES, 0, 3);
+//    indexedSquare.setIndexedDrawingLayout(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Application Loop.
     while(!glfwWindowShouldClose(window))
@@ -145,9 +157,10 @@ int main()
         // Start rendering.
         // draw our first triangle
         basicShaderProgram.use();
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        // glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         //glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
+        indexedSquare.render();
+        // glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
         // render();
         // End rendering.
         
