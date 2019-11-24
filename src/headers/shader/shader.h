@@ -18,6 +18,7 @@ public:
     // Sets the vertex shader of this program.
     bool setVertexShader(std::string a_vertexShaderSource);
     bool setFragmentShader(std::string a_fragmentShaderSource);
+    int getUniformLocation(std::string a_uniformName);
     int compile();
     void use();
 

@@ -1,6 +1,7 @@
 // Include libs.
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
+#include <math.h>
 
 #include "headers\shader\shader.h"
 // #include "headers\renderItem\renderItem.h"
@@ -93,6 +94,10 @@ int main()
     shaderProgram = basicShaderProgram.compile();
     basicShaderProgram.use();
 
+    // Set the rectangle color.
+    int colorUniform = basicShaderProgram.getUniformLocation("u_Color");
+    glUniform4f(colorUniform, 1.0f, 0.2f, 0.3f, 1.0f);
+
     float vertices[] = {
         // Triangle 1
         -0.5f,  0.5f, 0.0f, // Index 0, Top left
@@ -138,6 +143,15 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // Keeps track when we can cycle the colors.
+    int colorCycle = 0;
+    int colorCycleTick = 0;
+
+    // Controls the color of the rectangle.
+    float redColorChannel = 0.0f;
+    float greenColorChannel = 0.0f;
+    float blueColorChannel = 0.0f;
+
     // Application Loop.
     while(!glfwWindowShouldClose(window))
     {
@@ -147,8 +161,56 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        if(colorCycleTick >= colorCycle)
+        {
+            if(redColorChannel < 1.0f && greenColorChannel == 0.0f && blueColorChannel == 0.0f)
+            {
+                redColorChannel += 0.01f;
+            }
+            else if(redColorChannel > 0.0f && greenColorChannel < 1.0f && blueColorChannel == 0.0f)
+            {
+                greenColorChannel += 0.01f;
+
+                redColorChannel -= 0.01f;
+                if(redColorChannel <= 0.01f)
+                {
+                    redColorChannel = 0.0f;
+                }
+            }
+            else if(redColorChannel == 0.0f && greenColorChannel > 0.0f && blueColorChannel < 1.0f)
+            {
+                blueColorChannel += 0.01f;
+                
+                greenColorChannel -= 0.01f;
+                if(greenColorChannel <= 0.01f)
+                {
+                    greenColorChannel = 0.0f;
+                }
+            }
+            else if(redColorChannel >= 0.0f && greenColorChannel == 0.0f && blueColorChannel > 0.0f)
+            {
+                redColorChannel += 0.01f;
+
+                blueColorChannel -= 0.01f;
+                if(blueColorChannel <= 0.01f)
+                {
+                    blueColorChannel = 0.0f;
+                }
+            }
+
+            // std::cout << redColorChannel << ", " << greenColorChannel << ", " << blueColorChannel << std::endl;
+
+
+            colorCycleTick = 0;
+        }
+        else
+        {
+            colorCycleTick += 1;
+        }
+
         // Start rendering.
         basicShaderProgram.use();
+        glUniform4f(colorUniform, redColorChannel, greenColorChannel, blueColorChannel, 1.0f);
         glBindVertexArray(renderVao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
         // End rendering.
