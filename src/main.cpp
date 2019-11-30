@@ -1,16 +1,19 @@
+// Includes the standard "std" lib
+#include <iostream>
+
 // Include libs.
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 #include <math.h>
 
-#include "headers\shader\shader.h"
-// #include "headers\renderItem\renderItem.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-// Includes the standard "std" lib
-#include <iostream>
+#include "classes\shader\shader.h"
 
-int screenWidth = 800;
-int screenHeight = 600;
+
+float screenWidth = 960.0f;
+float screenHeight = 540.0f;
 
 // Objects.
 Shader basicShaderProgram;
@@ -98,22 +101,28 @@ int main()
     int colorUniform = basicShaderProgram.getUniformLocation("u_Color");
     glUniform4f(colorUniform, 1.0f, 0.2f, 0.3f, 1.0f);
 
+    // Set the matrix in pixel space, so 1px = to 1px.
+    int matrixUniform = basicShaderProgram.getUniformLocation("u_MVP");
+    glm::mat4 proj = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight, -1.0f, 1.0f);
+    glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, &proj[0][0]);
+
     float vertices[] = {
         // Triangle 1
-        -0.5f,  0.5f, 0.0f, // Index 0, Top left
-        -0.5f, -0.5f, 0.0f, // Index 1, Bottom left
-         0.5f, -0.5f, 0.0f, // Index 2, Bottom right
+        0.0f, 0.0f, 0.0f, 0.0f, // Index 0
+        0.0f, 100.0f, 0.0f, 0.0f, // Index 1
+        100.0f, 100.0f, 0.0f, 0.0f, // Index 2
          
          // Triangle 2
-         0.5f,  0.5f, 0.0f  // Index 3, Top right
+        -100.0f, 100.0f, 0.0f, 0.0f  // Index 3
     };
 
     unsigned int indices[] = {
-        // Triangle 1
-        0, 1, 2,
+        // // Triangle 1
+        // 0, 1, 2,
 
-        // Triangle 2
-        0, 3, 2
+        // // Triangle 2
+        // 0, 3, 2
+        3,3,3,3,3,3
     };
 
     unsigned int renderVao;
@@ -136,21 +145,12 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, vboBuffer);
     glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertices, GL_STATIC_DRAW);
 
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_TRUE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
     glGenBuffers(1, &eboBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Keeps track when we can cycle the colors.
-    int colorCycle = 0;
-    int colorCycleTick = 0;
-
-    // Controls the color of the rectangle.
-    float redColorChannel = 0.0f;
-    float greenColorChannel = 0.0f;
-    float blueColorChannel = 0.0f;
 
     // Application Loop.
     while(!glfwWindowShouldClose(window))
@@ -161,58 +161,11 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if(colorCycleTick >= colorCycle)
-        {
-            if(redColorChannel < 1.0f && greenColorChannel == 0.0f && blueColorChannel == 0.0f)
-            {
-                redColorChannel += 0.01f;
-            }
-            else if(redColorChannel > 0.0f && greenColorChannel < 1.0f && blueColorChannel == 0.0f)
-            {
-                greenColorChannel += 0.01f;
-
-                redColorChannel -= 0.01f;
-                if(redColorChannel <= 0.01f)
-                {
-                    redColorChannel = 0.0f;
-                }
-            }
-            else if(redColorChannel == 0.0f && greenColorChannel > 0.0f && blueColorChannel < 1.0f)
-            {
-                blueColorChannel += 0.01f;
-                
-                greenColorChannel -= 0.01f;
-                if(greenColorChannel <= 0.01f)
-                {
-                    greenColorChannel = 0.0f;
-                }
-            }
-            else if(redColorChannel >= 0.0f && greenColorChannel == 0.0f && blueColorChannel > 0.0f)
-            {
-                redColorChannel += 0.01f;
-
-                blueColorChannel -= 0.01f;
-                if(blueColorChannel <= 0.01f)
-                {
-                    blueColorChannel = 0.0f;
-                }
-            }
-
-            // std::cout << redColorChannel << ", " << greenColorChannel << ", " << blueColorChannel << std::endl;
-
-
-            colorCycleTick = 0;
-        }
-        else
-        {
-            colorCycleTick += 1;
-        }
-
         // Start rendering.
         basicShaderProgram.use();
-        glUniform4f(colorUniform, redColorChannel, greenColorChannel, blueColorChannel, 1.0f);
         glBindVertexArray(renderVao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+        glPointSize(30);
+        glDrawElements(GL_POINTS, 6, GL_UNSIGNED_INT, (void*)0);
         // End rendering.
         
         glfwSwapBuffers(window);
