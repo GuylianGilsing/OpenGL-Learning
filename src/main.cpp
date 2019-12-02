@@ -12,8 +12,8 @@
 #include "classes\shader\shader.h"
 
 
-float screenWidth = 960.0f;
-float screenHeight = 540.0f;
+float screenWidth = 640.0f;
+float screenHeight = 480.0f;
 
 // Objects.
 Shader basicShaderProgram;
@@ -103,7 +103,7 @@ int main()
 
     // Set the matrix in pixel space, so 1px = to 1px.
     int matrixUniform = basicShaderProgram.getUniformLocation("u_MVP");
-    glm::mat4 proj = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight, -1.0f, 1.0f);
+    glm::mat4 proj = glm::ortho(0.0f, 320.0f * (screenWidth/screenHeight), 0.0f, 320.0f * (screenWidth/screenHeight), -1.0f, 1.0f);
     glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, &proj[0][0]);
 
     float vertices[] = {
@@ -113,16 +113,16 @@ int main()
         100.0f, 100.0f, 0.0f, 0.0f, // Index 2
          
          // Triangle 2
-        -100.0f, 100.0f, 0.0f, 0.0f  // Index 3
+        100.0f, 0.0f, 0.0f, 0.0f,  // Index 3
     };
 
     unsigned int indices[] = {
         // // Triangle 1
-        // 0, 1, 2,
+        0, 1, 2,
 
         // // Triangle 2
-        // 0, 3, 2
-        3,3,3,3,3,3
+        0, 3, 2
+        // 0,0,0,0,0,0
     };
 
     unsigned int renderVao;
@@ -143,7 +143,7 @@ int main()
     // Create a vbo and fill it with data.
     glGenBuffers(1, &vboBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vboBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), vertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_TRUE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -164,8 +164,7 @@ int main()
         // Start rendering.
         basicShaderProgram.use();
         glBindVertexArray(renderVao);
-        glPointSize(30);
-        glDrawElements(GL_POINTS, 6, GL_UNSIGNED_INT, (void*)0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
         // End rendering.
         
         glfwSwapBuffers(window);
@@ -183,6 +182,11 @@ int main()
 void framebuffer_size_callback(GLFWwindow* a_window, int a_width, int a_height)
 {
     glViewport(0, 0, a_width, a_height);
+
+    // Set the matrix in pixel space, so 1px = to 1px.
+    int matrixUniform = basicShaderProgram.getUniformLocation("u_MVP");
+    glm::mat4 proj = glm::ortho(0.0f, (float)a_width * (a_width/a_height), 0.0f, (float)a_height * (a_width/a_height), -1.0f, 1.0f);
+    glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, &proj[0][0]);
 }
 
 void processInput(GLFWwindow* a_window)
